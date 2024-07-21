@@ -11,7 +11,7 @@
 <body>
     <div class="form-content">
         <h2>Enviar su formulario</h2>
-        <form id="reservation-form">
+        <form id="reservation-form" action="https://formsubmit.co/aeduardo.rm2005@gmail.com" method="POST">
             <label for="name">Nombre</label>
             <input type="text" name="name" id="name" required>
 
@@ -61,7 +61,15 @@
                 <p>Tu folio para pago presencial es: <span id="folio"></span></p>
             </div>
 
-            <button type="button" class="btn" onclick="generatePDF()">Enviar</button>
+            <div class="button-container">
+                <button type="button" class="btn" onclick="generatePDF()">Descargar PDF</button>
+                <button type="submit" class="btn" onclick="attachPDF()">Enviar al Correo</button>
+            </div>
+
+            <!-- Agrega un campo oculto para el PDF -->
+            <input type="hidden" name="_subject" value="Nueva reservación">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" id="pdf-content" name="pdf-content">
         </form>
     </div>
 
@@ -128,7 +136,7 @@
             doc.setFontSize(14);
 
             // Agregar el encabezado
-            doc.text("ReservacionesRodriguez", 10, 10);
+            doc.text("Reservaciones Rodriguez", 10, 10);
 
             // Obtener los valores del formulario
             const name = document.getElementById('name').value;
@@ -163,9 +171,14 @@
                 doc.text(`Folio para pago presencial: ${folio}`, 10, 125); // Aumentar el espacio aquí
             }
 
+            // Guardar el PDF en el navegador
             doc.save('reservacion.pdf');
         }
-    </script>
 
+        function attachPDF() {
+            const pdfContent = generatePDF();
+            document.getElementById('pdf-content').value = pdfContent;
+        }
+    </script>
 </body>
 </html>
