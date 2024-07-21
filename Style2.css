@@ -108,3 +108,47 @@ input:focus, textarea:focus, select:focus {
         width: 100%;
     }
 }
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #1E92E9;
+    color: #F4F6F9; /* Color blanco */
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 48%; /* Ajusta el ancho para que los botones se alineen en la misma fila */
+}
+
+.btn:hover {
+    background-color: #2198f9; 
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #1E92E9;
+    color: #F4F6F9;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 48%; /* Ajusta el ancho para que los botones se alineen en la misma fila */
+}
+
+.btn:hover {
+    background-color: #2198f9; 
+}
