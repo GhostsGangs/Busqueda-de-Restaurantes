@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     sendEmailBtn.addEventListener("click", function(e) {
         e.preventDefault();
+        const email = document.getElementById('email').value;
+        if (!email) {
+            alert('Por favor, ingrese una dirección de correo electrónico válida.');
+            return;
+        }
         handleFormSubmission('email');
     });
 
@@ -15,58 +20,88 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function handleFormSubmission(action) {
         const formData = new FormData(form);
+        const reservaId = generarIdUnico();
         
+        const reservaData = {};
+        for (let [key, value] of formData.entries()) {
+            reservaData[key] = value;
+        }
+        reservaData.id = reservaId;
+    
+        localStorage.setItem(`reserva_${reservaId}`, JSON.stringify(reservaData));
+    
         if (action === 'email') {
-            sendEmail(formData);
+            sendEmail(formData, reservaId);
         } else if (action === 'pdf') {
-            generatePDF(formData);
+            generateAndDownloadPDF(reservaData);
         }
     }
+    
+    function generatePDFDataURL(reservaData) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(18);
+        doc.text('Detalles de la Reserva', 20, 20);
+        
+        doc.setFontSize(12);
+        let y = 40;
+        for (let [key, value] of Object.entries(reservaData)) {
+            if (key !== 'id') {
+                doc.text(`${key}: ${value}`, 20, y);
+                y += 10;
+            }
+        }
 
-    function sendEmail(formData) {
+        return doc.output('datauristring');
+    }
+
+    function sendEmail(formData, reservaId) {
+        const reservaData = {};
+        for (let [key, value] of formData.entries()) {
+            reservaData[key] = value;
+        }
+        reservaData.id = reservaId;
+    
+        const pdfDataURL = generatePDFDataURL(reservaData);
+    
         const templateParams = {
+            to_email: formData.get('email'),
             name: formData.get('name'),
-            email: formData.get('email'),
             restaurant_name: formData.get('restaurant-name'),
             restaurant_address: formData.get('restaurant-address'),
             date: formData.get('date'),
             time: formData.get('time'),
             guests: formData.get('guests'),
             event_type: formData.get('event-type'),
-            message: formData.get('message')
+            message: formData.get('message'),
+            pdf_url: pdfDataURL
         };
-
-        emailjs.send('service_alj34m3', 'template_wmtno7t', templateParams)
+    
+        console.log('PDF URL:', pdfDataURL); // Para depuración
+    
+        emailjs.send('service_z8q1zwl', 'template_yv1grrs', templateParams)
             .then(function(response) {
                 console.log('SUCCESS!', response.status, response.text);
                 alert('Reserva enviada por correo. Por favor, revisa tu bandeja de entrada.');
             }, function(error) {
-                console.log('FAILED...', error);
-                alert('Error al enviar el correo. Por favor, intenta de nuevo.');
+                console.error('FAILED...', error);
+                alert('Error al enviar el correo: ' + JSON.stringify(error));
             });
     }
+    
+    function generarIdUnico() {
+        const timestamp = Date.now().toString(36);
+        const randomStr = Math.random().toString(36).substring(2, 7);
+        return `${timestamp}-${randomStr}`;
+    }
 
-    function generatePDF(formData) {
-        fetch('process_reservation.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Respuesta del servidor:', data);
-            if (data.success) {
-                alert(data.message);
-                if (data.pdfUrl) {
-                    window.open(data.pdfUrl, '_blank');
-                }
-            } else {
-                alert("Error: " + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("Ocurrió un error al generar el PDF.");
-        });
+    function generateAndDownloadPDF(reservaData) {
+        const pdfDataURL = generatePDFDataURL(reservaData);
+        const link = document.createElement('a');
+        link.href = pdfDataURL;
+        link.download = 'Reserva.pdf';
+        link.click();
     }
 
     // Configuración del botón de PayPal
@@ -117,6 +152,10 @@ document.addEventListener("DOMContentLoaded", function() {
     if (restaurantName) {
         document.getElementById('restaurant-name').value = restaurantName;
     }
+    if (restaurantAddress) {
+        document.getElementById('restaurant-address').value = restaurantAddress;
+    }
+});
     if (restaurantAddress) {
         document.getElementById('restaurant-address').value = restaurantAddress;
     }
