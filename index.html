@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReservasClima Rodriguez</title>
+    <title>Reservas y Clima Rodriguez</title>
     <link rel="icon" type="image/svg+xml" href="Imagenes/Clima.svg" />
     <script src="./custom.js" defer></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPAcooSJJdMeoRgp81_5qXW7ez_pT87Q0&libraries=places"></script>
@@ -212,7 +212,7 @@
                 padding: 1.5em;
             }
         }
-        
+
         .navbar {
             background-color: var(--accent-color);
             position: sticky;
@@ -251,7 +251,7 @@
         .content-section.active {
             display: block;
         }
-        
+
     </style>
     <script>
         function initMap() {
@@ -322,19 +322,7 @@
 
         window.onload = initMap;
 
-        //Secciones
         document.addEventListener('DOMContentLoaded', function() {
-            const countrySelect = document.getElementById('country');
-            const cityInput = document.getElementById('city');
-
-            countrySelect.addEventListener('change', function() {
-                if (this.value) {
-                    cityInput.style.display = 'block';
-                } else {
-                    cityInput.style.display = 'none';
-                }
-            });
-
             const navLinks = document.querySelectorAll('.navbar a');
             const sections = document.querySelectorAll('.content-section');
 
@@ -356,22 +344,32 @@
                     this.classList.add('active');
 
                     if (targetId === 'map-section') {
-                        // Asegúrate de que el mapa se renderice correctamente
                         window.dispatchEvent(new Event('resize'));
                     }
                 });
             });
 
-            // Activar la primera sección por defecto
             document.querySelector('.navbar a').click();
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const countrySelect = document.getElementById('country');
+            const cityInput = document.getElementById('city');
+
+            countrySelect.addEventListener('change', function() {
+                if (this.value) {
+                    cityInput.style.display = 'block';
+                } else {
+                    cityInput.style.display = 'none';
+                }
+            });
+        });
     </script>
-    
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>Reservaciones Rodríguez</h1>
+            <h1>Reservas Rodriguez</h1>
         </div>
     </header>
     <nav class="navbar">
@@ -387,7 +385,7 @@
                 <p>Agregue ciudad y país</p>
             </div>
             <form action="" method="POST" class="get-weather">
-                <select name="" id="country">
+                <select name="country" id="country">
                     <option disabled selected value="">Selecciona el país</option>
                     <option value="AR">Argentina</option>
                     <option value="CO">Colombia</option>
@@ -397,7 +395,7 @@
                     <option value="MX">México</option>
                     <option value="PE">Perú</option>
                 </select>
-                <input type="text" name="city" id="city" placeholder="Escribe tu ciudad..." style="display: none;">
+                <input type="text" name="city" id="city" placeholder="Escribe tu ciudad..." style="display:none;">
                 <input type="submit" value="Obtener Clima">
             </form>
         </section>
