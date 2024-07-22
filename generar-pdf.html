@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar PDF de Reserva</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h1>Generando PDF de tu reserva...</h1>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const reservaId = urlParams.get('reserva_id');
+        const reservaData = JSON.parse(localStorage.getItem(`reserva_${reservaId}`));
+
+        if (reservaData) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(18);
+            doc.text('Detalles de la Reserva', 20, 20);
+            
+            doc.setFontSize(12);
+            let y = 40;
+            for (let [key, value] of Object.entries(reservaData)) {
+                if (key !== 'id') {
+                    doc.text(`${key}: ${value}`, 20, y);
+                    y += 10;
+                }
+            }
+
+            doc.save(`Reserva_${reservaId}.pdf`);
+            alert('PDF generado y descargado con éxito.');
+        } else {
+            alert('No se encontraron datos para esta reserva.');
+        }
+    </script>
+</body>
+</html>
