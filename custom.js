@@ -12,17 +12,18 @@ form.addEventListener('submit', (e) => {
     }
 
     callAPI(nameCity.value, nameCountry.value);
-    //console.log(nameCity.value);
-    //console.log(nameCountry.value);
 })
 
 function callAPI(city, country){
     const apiId = 'cb2fa40f1a69f4724cdd57b8a8a87960';
-    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiId}`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiId}`;
 
     fetch(url)
-        .then(data => {
-            return data.json();
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
         })
         .then(dataJSON => {
             if (dataJSON.cod === '404') {
@@ -31,11 +32,11 @@ function callAPI(city, country){
                 clearHTML();
                 showWeather(dataJSON);
             }
-            //console.log(dataJSON);
         })
         .catch(error => {
-            console.log(error);
-        })
+            console.error('There was a problem with the fetch operation:', error);
+            showError('Hubo un problema con la solicitud de la API...');
+        });
 }
 
 function showWeather(data){
@@ -55,7 +56,6 @@ function showWeather(data){
     `;
 
     result.appendChild(content);
-
 }
 
 function showError(message){
