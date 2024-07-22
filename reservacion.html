@@ -2,183 +2,94 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservación de Restaurante</title>
-    <link rel="stylesheet" href="Style2.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="./Style2.css">
+    <link rel="icon" type="image" href="Imagenes/Reserva.png" />
+    <title>ReservacionOrtizMx.com</title>
 </head>
 <body>
-    <div class="form-content">
-        <h2>Enviar su formulario</h2>
-        <form id="reservation-form" action="https://formsubmit.co/aeduardo.rm2005@gmail.com" method="POST">
-            <label for="name">Nombre</label>
-            <input type="text" name="name" id="name" required>
-
-            <label for="email">Correo Electrónico</label>
-            <input type="email" name="email" id="email" required>
-
-            <label for="phone">Número de teléfono</label>
-            <input type="tel" id="phone" name="phone" required>
-
-            <label for="restaurant-name">Nombre del Restaurante</label>
-            <input type="text" id="restaurant-name" name="restaurant-name" required readonly>
-
-            <label for="restaurant-address">Dirección del Restaurante</label>
-            <input type="text" id="restaurant-address" name="restaurant-address" required readonly>
-
-            <label for="date">Fecha de Reservación</label>
-            <input type="date" id="date" name="date" required>
-
-            <label for="time">Hora de Reservación</label>
-            <input type="time" id="time" name="time" required>
-
-            <label for="guests">Número de Personas</label>
-            <select id="guests" name="guests" required>
-                <option value="1">1 Persona</option>
-                <option value="2">2 Personas</option>
-                <option value="3">3 Personas</option>
-                <option value="4">4 Personas</option>
-                <option value="5">5 Personas</option>
-                <option value="6">6 Personas</option>
-                <option value="7">7 Personas</option>
-                <option value="8">8 Personas</option>
-                <option value="9">9 Personas</option>
-                <option value="10">10 Personas</option>
-            </select>
-
-            <label for="event-type">Tipo de Evento</label>
-            <input type="text" id="event-type" name="event-type" required>
-
-            <label for="pay-now">¿Desea adelantar su pago?</label>
-            <select id="pay-now" name="pay-now" required>
-                <option value="yes">Sí</option>
-                <option value="no">No</option>
-            </select>
-
+    <div class="reservation-form">
+        <h2>Reservar una Mesa</h2>
+        <form id="reservation-form">
+            <div class="form-group">
+                <label for="name">Nombre Completo</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Número de Teléfono</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="restaurant-name">Nombre del Restaurante</label>
+                <input type="text" id="restaurant-name" name="restaurant-name" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="restaurant-address">Dirección del Restaurante</label>
+                <input type="text" id="restaurant-address" name="restaurant-address" required readonly>
+            </div>
+            <div class="form-group">
+                <label for="date">Fecha de Reservación</label>
+                <input type="date" id="date" name="date" required min="<?php echo date('Y-m-d'); ?>">
+            </div>
+            <div class="form-group">
+                <label for="time">Hora de Reservación</label>
+                <input type="time" id="time" name="time" required>
+            </div>
+            <div class="form-group">
+                <label for="guests">Número de Personas</label>
+                <select id="guests" name="guests" required>
+                    <option value="1">1 Persona</option>
+                    <option value="2">2 Personas</option>
+                    <option value="3">3 Personas</option>
+                    <option value="4">4 Personas</option>
+                    <option value="5">5 Personas</option>
+                    <option value="6">6 Personas</option>
+                    <option value="7">7 Personas</option>
+                    <option value="8">8 Personas</option>
+                    <option value="9">9 Personas</option>
+                    <option value="10">10 Personas</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="event-type">Tipo de Evento</label>
+                <input type="text" id="event-type" name="event-type" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Mensaje (opcional)</label>
+                <textarea id="message" name="message" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="pay-now">¿Desea adelantar su pago?</label>
+                <select id="pay-now" name="pay-now" required>
+                    <option value="yes">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
             <div id="paypal-button-container" style="display: none;"></div>
             <div id="folio-container" style="display: none;">
                 <p>Tu folio para pago presencial es: <span id="folio"></span></p>
             </div>
-
-            <div class="button-container">
-                <button type="button" class="btn" onclick="generatePDF()">Descargar PDF</button>
-                <button type="submit" class="btn" onclick="attachPDF()">Enviar al Correo</button>
+            <div class="form-group">
+                <button type="button" id="send-email-btn" class="submit-btn" aria-label="Enviar reserva por correo">Enviar Reserva por Correo</button>
+                <button type="button" id="download-pdf-btn" class="submit-btn" aria-label="Descargar ticket en PDF">Descargar Ticket PDF</button>
             </div>
-
-            <!-- Agrega un campo oculto para el PDF -->
-            <input type="hidden" name="_subject" value="Nueva reservación">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" id="pdf-content" name="pdf-content">
         </form>
     </div>
 
     <!-- Script para el SDK de PayPal -->
     <script src="https://www.paypal.com/sdk/js?client-id=ASwEvQnypYJCGv7v3zTdS2rLkYkv81FiP9GCmML5vP9HkfufIH5JXBeBseOtq74B1Hzg5kuzFlonaflH"></script>
+    <!-- Tu archivo JavaScript personalizado -->
     <script src="./reservacion.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const payNowSelect = document.getElementById('pay-now');
-            const paypalButtonContainer = document.getElementById('paypal-button-container');
-            const folioContainer = document.getElementById('folio-container');
-            const folioSpan = document.getElementById('folio');
-
-            payNowSelect.addEventListener('change', function() {
-                if (payNowSelect.value === 'yes') {
-                    paypalButtonContainer.style.display = 'block';
-                    folioContainer.style.display = 'none';
-                    folioSpan.textContent = '';
-                } else {
-                    paypalButtonContainer.style.display = 'none';
-                    const folio = 'FOLIO-' + Math.floor(Math.random() * 1000000);
-                    folioSpan.textContent = folio;
-                    folioContainer.style.display = 'block';
-                }
-            });
-
-            // Inicializar el botón de PayPal
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: '10.00' // Aquí puedes poner el valor de la reservación
-                            }
-                        }]
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        alert('Pago completado por ' + details.payer.name.given_name);
-                    });
-                }
-            }).render('#paypal-button-container');
-
-            // Llenar campos del restaurante desde la URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const restaurantName = urlParams.get('restaurant-name');
-            const restaurantAddress = urlParams.get('restaurant-address');
-
-            if (restaurantName) {
-                document.getElementById('restaurant-name').value = restaurantName;
-            }
-            if (restaurantAddress) {
-                document.getElementById('restaurant-address').value = restaurantAddress;
-            }
-        });
-
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // Establecer la fuente Arial y el tamaño 14
-            doc.setFont("Arial");
-            doc.setFontSize(14);
-
-            // Agregar el encabezado
-            doc.text("Reservaciones Rodriguez", 10, 10);
-
-            // Obtener los valores del formulario
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const restaurantName = document.getElementById('restaurant-name').value;
-            const restaurantAddress = document.getElementById('restaurant-address').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const guests = document.getElementById('guests').value;
-            const eventType = document.getElementById('event-type').value;
-            const payNow = document.getElementById('pay-now').value;
-            const folio = document.getElementById('folio').textContent;
-
-            // Agregar los detalles al PDF
-            doc.text(`Nombre: ${name}`, 10, 20);
-            doc.text(`Correo Electrónico: ${email}`, 10, 30);
-            doc.text(`Número de teléfono: ${phone}`, 10, 40);
-            doc.text(`Nombre del Restaurante: ${restaurantName}`, 10, 50);
-            
-            // Dividir la dirección en líneas
-            const addressLines = doc.splitTextToSize(`Dirección del Restaurante: ${restaurantAddress}`, 190);
-            doc.text(addressLines, 10, 60);
-            
-            doc.text(`Fecha de Reservación: ${date}`, 10, 75); // Aumentar el espacio aquí
-            doc.text(`Hora de Reservación: ${time}`, 10, 85); // Aumentar el espacio aquí
-            doc.text(`Número de Personas: ${guests}`, 10, 95); // Aumentar el espacio aquí
-            doc.text(`Tipo de Evento: ${eventType}`, 10, 105); // Aumentar el espacio aquí
-            doc.text(`¿Desea adelantar su pago?: ${payNow}`, 10, 115); // Aumentar el espacio aquí
-
-            if (folio) {
-                doc.text(`Folio para pago presencial: ${folio}`, 10, 125); // Aumentar el espacio aquí
-            }
-
-            // Guardar el PDF en el navegador
-            doc.save('reservacion.pdf');
-        }
-
-        function attachPDF() {
-            const pdfContent = generatePDF();
-            document.getElementById('pdf-content').value = pdfContent;
-        }
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function() {
+          emailjs.init("eA0fPUDGoE3NNIy18");
+       })();
     </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
